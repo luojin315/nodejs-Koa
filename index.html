@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title></title>
+</head>
+<style>
+	*{
+		margin: 0px;
+		padding: 0px;
+	}
+	.box{
+		width: 600px;
+		height: 300px;
+		background-color: antiquewhite;
+		overflow-y: auto;
+	}
+	input{
+		margin: 10px;
+		padding: 5px;
+	}
+</style>
+<body>
+	<div class="box">
+
+	</div>
+	<form method="post">
+		<!-- 姓名：<input type="text" name="name">
+		年龄：<input type="text" name="age"> -->
+		<input type="button" value="剪刀" class="btn" />
+		<input type="button" value="石头" class="btn" />
+		<input type="button" value="布" class="btn" />
+	</form>
+	<button id="btn">点击</button>
+	<form id="form">
+		<input type="text" name="name" placeholder="name">
+		<input type="text" name="age" placeholder="agr">
+		<input type="button" value="提交">
+	</form>
+	<script src="./js/jquery-1.11.0.js"></script>
+	<script>
+		$(function () {
+			const http = 'http://127.0.0.1:3000';
+
+
+
+			$("#form input[type='button']").click(function(){
+				let n = $("#form input[name='name']").val();
+				let a = $("#form input[name='age']").val();
+				console.log(n, a)
+				$.ajax({
+						url: http+"/form",
+						type: "POST",
+						detaType: "json",
+						data: {
+							name: n,
+							age: a
+						},
+						success: function (data) {
+							console.log(data)
+						},
+						error: function (res) {
+							console.log(res);
+						}
+
+					})
+			})
+
+			$(".btn").click(function (e) {
+				/* let val = $("input[name='name']").val();
+				let age = $("input[name='age']").val(); */
+				let userActive = $(e.target).val();
+				switch( userActive ) {
+					case '剪刀' : userActive = 'scissor';break
+					case '石头' : userActive = 'rock';break
+					case '布' : userActive = 'cloth';break
+				}
+				gameHttp(userActive)
+			})
+			function gameHttp(val){
+						$.ajax({
+						url: http+"/game",
+						type: "GET",
+						detaType: "json",
+						data: {
+							userActive: val
+						},
+						success: function (data) {
+							$(".box").append(`<p>${data.message}</p>`)
+							console.log(data)
+						},
+						error: function (res) {
+							console.log(res);
+						}
+
+					})
+				}
+				$("#btn").click(function (e) {
+					$.ajax({
+						url: http+"/juzi",
+						type: "GET",
+						detaType: "json",
+						success: function (data) {
+							console.log(data)
+						},
+						error: function (res) {
+							console.log(res);
+						}
+
+					})
+				})
+		})
+	</script>
+</body>
+
+</html>
